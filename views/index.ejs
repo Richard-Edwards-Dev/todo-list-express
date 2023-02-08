@@ -18,21 +18,30 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Todo List: </h1>
-    <ul class="todoItems">
-    <% for(let i=0; i < items.length; i++) {%>
+    <h1>Ancestries: </h1>
+    <ul class="ancestries">
+    <% for(let i=0; i < ancestry.length; i++) {%>
         <li class="item">
-            <% if(items[i].completed === true) {%>
-                <span class='completed'><%= items[i].thing %></span>
-            <% }else{ %>
-                <span><%= items[i].thing %></span>
-            <% } %>    
-            <span class='fa fa-trash'></span>
+                <span><%= ancestry[i].name %></span>
         </li>
     <% } %>
     </ul>
-
-    <h2>Left to do: <%= left %></h2>
+    <h1>Backgrounds: </h1>
+    <ul class="backgrounds">
+    <% for(let i=0; i < background.length; i++) {%>
+        <li class="item">
+                <span><%= background[i].name %></span>
+        </li>
+    <% } %>
+    </ul>
+    <h1>Classes: </h1>
+    <ul class="classes">
+    <% for(let i=0; i < classes.length; i++) {%>
+        <li class="item">
+                <span><%= classes[i].name %></span>
+        </li>
+    <% } %>
+    </ul>
 
     <h2>Add A Todo:</h2>
 

@@ -7,12 +7,13 @@ Array.from(deleteBtn).forEach((element)=>{
 })
 
 Array.from(item).forEach((element)=>{
-    element.addEventListener('click', markComplete)
+    element.addEventListener('click', getDescription)
 })
 
 Array.from(itemCompleted).forEach((element)=>{
     element.addEventListener('click', markUnComplete)
 })
+let charData
 
 async function deleteItem(){
     const itemText = this.parentNode.childNodes[1].innerText
@@ -33,19 +34,16 @@ async function deleteItem(){
     }
 }
 
-async function markComplete(){
+async function getDescription(){
     const itemText = this.parentNode.childNodes[1].innerText
     try{
-        const response = await fetch('markComplete', {
-            method: 'put',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                'itemFromJS': itemText
-            })
+        const response = await fetch('getDescription', {
+            method: 'get',
+            headers: {'Content-Type': 'application/json'}
           })
         const data = await response.json()
+        charData = data
         console.log(data)
-        location.reload()
 
     }catch(err){
         console.log(err)

@@ -23,16 +23,19 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
+let url = 'https://api.pathfinder2.fr/v1/pf2/'
+let backgroundData
 
 app.get('/',async (request, response)=>{
-    const playerAncestry = await db.collection('pf2e').find({"ancestry": {$exists: true}}).toArray()
-    ancestryList = playerAncestry[0].ancestry.results
-    const playerBackground = await db.collection('pf2e').find({"background": {$exists: true}}).toArray()
-    backgroundList = playerBackground[0].background.results
-    const playerClasses = await db.collection('pf2e').find({"classes": {$exists: true}}).toArray()
-    classList = playerClasses[0].classes.results
-    // const itemsLeft = await db.collection('pf2e').countDocuments({completed: false})
-    response.render('index.ejs', {ancestry: ancestryList, background: backgroundList, classes: classList})
+    const apiresponse = await fetch(url + 'background',{
+        headers: {
+            'Authorization': process.env.AuthKey
+        }
+    })
+    const data = await apiresponse.json()
+    backgroundData = data
+    console.log(data)
+    response.render('index.ejs', { background: data.results})
     // db.collection('todos').find().toArray()
     // .then(data => {
     //     db.collection('todos').countDocuments({completed: false})
@@ -43,27 +46,34 @@ app.get('/',async (request, response)=>{
     // .catch(error => console.error(error))
 })
 
-// app.post('/addTodo', (request, response) => {
-//     db.collection('pf2e').insertOne({thing: request.body.todoItem,})
-//     .then(result => {
-//         console.log('Todo Added')
-//         response.redirect('/')
-//     })
-//     .catch(error => console.error(error))
-// })
-
-app.get('/getDescription', (request, response) => {
-    db.collection('pf2e').find().toArray()
+app.post('/addTodo', (request, response) => {
+    db.collection('pf2e').insertOne({background: backgroundData})
     .then(result => {
-        console.log(result)
-        response.json(result)
+        console.log('Todo Added')
+        response.redirect('/')
     })
     .catch(error => console.error(error))
-
 })
 
+// app.put('/markComplete', (request, response) => {
+//     db.collection('pf2e').updateOne({thing: request.body.itemFromJS},{
+//         $set: {
+//             completed: true
+//           }
+//     },{
+//         sort: {_id: -1},
+//         upsert: false
+//     })
+//     .then(result => {
+//         console.log('Marked Complete')
+//         response.json('Marked Complete')
+//     })
+//     .catch(error => console.error(error))
+
+// })
+
 // app.put('/markUnComplete', (request, response) => {
-//     db.collection('to-do-list').updateOne({thing: request.body.itemFromJS},{
+//     db.collection('pf2e').updateOne({thing: request.body.itemFromJS},{
 //         $set: {
 //             completed: false
 //           }
@@ -79,13 +89,13 @@ app.get('/getDescription', (request, response) => {
 
 // })
 
-app.delete('/deleteItem', (request, response) => {
-    db.collection('pf2e').deleteOne({thing: request.body.itemFromJS})
-    .then(result => {
-        console.log('Todo Deleted')
-        response.json('Todo Deleted')
-    })
-    .catch(error => console.error(error))
+// app.delete('/deleteItem', (request, response) => {
+//     db.collection('pf2e').deleteOne({thing: request.body.itemFromJS})
+//     .then(result => {
+//         console.log('Todo Deleted')
+//         response.json('Todo Deleted')
+//     })
+//     .catch(error => console.error(error))
 
-})
+// })
 
